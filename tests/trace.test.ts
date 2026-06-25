@@ -34,6 +34,12 @@ describe("traceInstructions", () => {
       path.join("src", "AGENTS.md")
     ]);
     expect(result.matches.every((match) => match.applies)).toBe(true);
+    expect(result.summary).toEqual({
+      total: 2,
+      applies: 2,
+      skipped: 0,
+      byAgent: { codex: 2, copilot: 0, cursor: 0, claude: 0, gemini: 0 }
+    });
   });
 
   test("traces Copilot repository and path-scoped instruction files", async () => {
@@ -92,6 +98,8 @@ describe("traceInstructions", () => {
     });
 
     expect(renderMarkdown(result)).toContain("| Target | `src/feature/widget.ts` |");
+    expect(renderMarkdown(result)).toContain("| Applies | 2 |");
+    expect(renderMarkdown(result)).toContain("| By agent | codex=2, copilot=0, cursor=0, claude=0, gemini=0 |");
     expect(renderMarkdown(result)).toContain("| 1 | `AGENTS.md` | codex | AGENTS.md | applies |");
   });
 });

@@ -17,11 +17,19 @@ export interface InstructionMatch {
   reason: string;
 }
 
+export interface TraceSummary {
+  total: number;
+  applies: number;
+  skipped: number;
+  byAgent: Record<Exclude<AgentKind, "all">, number>;
+}
+
 export interface TraceResult {
   root: string;
   target: string;
   agent: AgentKind;
   matches: InstructionMatch[];
+  summary: TraceSummary;
 }
 
 export interface ReportFiles {
@@ -52,7 +60,8 @@ export async function traceInstructions(options: TraceOptions): Promise<TraceRes
     root,
     target,
     agent,
-    matches
+    matches,
+    summary: summarizeMatches(matches)
   };
 }
 
@@ -72,7 +81,10 @@ export function renderText(result: TraceResult): string {
     `Root: ${result.root}`,
     `Target: ${slash(result.target)}`,
     `Agent: ${result.agent}`,
-    `Instruction files: ${result.matches.length}`,
+    `Instruction files: ${result.summary.total}`,
+    `Applies: ${result.summary.applies}`,
+    `Skipped: ${result.summary.skipped}`,
+    `By agent: ${formatAgentCounts(result.summary.byAgent)}`,
     ""
   ];
 
@@ -109,7 +121,10 @@ export function renderMarkdown(result: TraceResult): string {
 | Root | \`${result.root}\` |
 | Target | \`${slash(result.target)}\` |
 | Agent | \`${result.agent}\` |
-| Instruction files | ${result.matches.length} |
+| Instruction files | ${result.summary.total} |
+| Applies | ${result.summary.applies} |
+| Skipped | ${result.summary.skipped} |
+| By agent | ${formatAgentCounts(result.summary.byAgent)} |
 
 ## Instruction Chain
 
@@ -296,6 +311,23 @@ function agentMatches(selected: AgentKind, candidate: Exclude<AgentKind, "all">)
 function isInsideOrEqual(parent: string, child: string): boolean {
   const relative = path.relative(parent, child);
   return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+function summarizeMatches(matches: InstructionMatch[]): TraceSummary {
+  const byAgent = Object.fromEntries(AGENT_ORDER.map((agent) => [agent, 0])) as TraceSummary["byAgent"];
+  for (const match of matches) {
+    byAgent[match.agent] += 1;
+  }
+  return {
+    total: matches.length,
+    applies: matches.filter((match) => match.applies).length,
+    skipped: matches.filter((match) => !match.applies).length,
+    byAgent
+  };
+}
+
+function formatAgentCounts(counts: TraceSummary["byAgent"]): string {
+  return AGENT_ORDER.map((agent) => `${agent}=${counts[agent]}`).join(", ");
 }
 
 function slash(value: string): string {
