@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { renderText, traceInstructions, writeReports, type AgentKind } from "./index.js";
 
 interface CliOptions {
@@ -51,7 +52,7 @@ async function main(argv: string[] = process.argv.slice(2)): Promise<void> {
   console.log(options.json ? JSON.stringify(result, null, 2) : renderText(result));
 }
 
-function parseArgs(argv: string[]): CliOptions {
+export function parseArgs(argv: string[]): CliOptions {
   const args = [...argv];
   const command = readCommand(args);
   let root = process.cwd();
@@ -97,7 +98,7 @@ function readCommand(args: string[]): CliOptions["command"] {
 
 function requireValue(args: string[], option: string): string {
   const value = args.shift();
-  if (!value || value.startsWith("--")) throw new Error(`${option} requires a value`);
+  if (!value || value.startsWith("-")) throw new Error(`${option} requires a value`);
   return value;
 }
 
@@ -157,8 +158,14 @@ Examples:
 `;
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`agent-which: ${message}`);
-  process.exitCode = 1;
-});
+if (isCliEntryPoint()) {
+  main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`agent-which: ${message}`);
+    process.exitCode = 1;
+  });
+}
+
+function isCliEntryPoint(): boolean {
+  return process.argv[1] ? import.meta.url === pathToFileURL(process.argv[1]).href : false;
+}
