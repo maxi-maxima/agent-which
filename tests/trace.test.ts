@@ -16,6 +16,7 @@ async function makeWorkspace(): Promise<string> {
     "---\napplyTo: \"src/**/*.ts\"\n---\n# TypeScript instructions\n"
   );
   await writeFile(path.join(root, "CLAUDE.md"), "# Claude only\n");
+  await writeFile(path.join(root, "ANTHROPIC.md"), "# Anthropic only\n");
   return root;
 }
 
@@ -38,7 +39,7 @@ describe("traceInstructions", () => {
       total: 2,
       applies: 2,
       skipped: 0,
-      byAgent: { codex: 2, copilot: 0, cursor: 0, claude: 0, gemini: 0 }
+      byAgent: { codex: 2, copilot: 0, cursor: 0, claude: 0, anthropic: 0, gemini: 0 }
     });
   });
 
@@ -69,6 +70,7 @@ describe("traceInstructions", () => {
     });
 
     expect(result.matches.some((match) => match.surface === "CLAUDE.md" && match.agent === "claude")).toBe(true);
+    expect(result.matches.some((match) => match.surface === "ANTHROPIC.md" && match.agent === "anthropic")).toBe(true);
   });
 
   test("keeps non-matching Copilot applyTo files visible in all-agent traces", async () => {
@@ -99,7 +101,7 @@ describe("traceInstructions", () => {
 
     expect(renderMarkdown(result)).toContain("| Target | `src/feature/widget.ts` |");
     expect(renderMarkdown(result)).toContain("| Applies | 2 |");
-    expect(renderMarkdown(result)).toContain("| By agent | codex=2, copilot=0, cursor=0, claude=0, gemini=0 |");
+    expect(renderMarkdown(result)).toContain("| By agent | codex=2, copilot=0, cursor=0, claude=0, anthropic=0, gemini=0 |");
     expect(renderMarkdown(result)).toContain("| 1 | `AGENTS.md` | codex | AGENTS.md | applies |");
   });
 });

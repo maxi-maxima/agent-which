@@ -8,7 +8,7 @@
 
 </div>
 
-现在的 AI 编码代理会从很多地方读取项目指令：`AGENTS.md`、嵌套 `AGENTS.md`、`.github/copilot-instructions.md`、`.github/instructions/*.instructions.md`、`CLAUDE.md`、`GEMINI.md` 和 Cursor 规则。
+现在的 AI 编码代理会从很多地方读取项目指令：`AGENTS.md`、嵌套 `AGENTS.md`、`.github/copilot-instructions.md`、`.github/instructions/*.instructions.md`、`CLAUDE.md`、`ANTHROPIC.md`、`GEMINI.md` 和 Cursor 规则。
 
 当一次生成结果不对时，最先要问的问题通常很简单：
 
@@ -80,6 +80,7 @@ npx github:maxi-maxima/agent-which trace src/index.ts --out reports/agent-which
 - `copilot`
 - `cursor`
 - `claude`
+- `anthropic`
 - `gemini`
 
 ## 会追踪什么
@@ -90,6 +91,7 @@ npx github:maxi-maxima/agent-which trace src/index.ts --out reports/agent-which
 | `.github/copilot-instructions.md` | Copilot | 显示仓库级 Copilot 自定义指令。 |
 | `.github/instructions/*.instructions.md` | Copilot | 读取简单的 `applyTo` frontmatter，并报告匹配文件。 |
 | `CLAUDE.md` | Claude | 显示 Claude 根指令。 |
+| `ANTHROPIC.md` | Anthropic | 显示 Anthropic 根指令。 |
 | `GEMINI.md` | Gemini | 显示 Gemini 根指令。 |
 | `.cursorrules` | Cursor | 显示旧版 Cursor 规则。 |
 

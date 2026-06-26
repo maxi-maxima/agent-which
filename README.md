@@ -12,7 +12,7 @@
 
 </div>
 
-AI coding agents now read guidance from many places: `AGENTS.md`, nested `AGENTS.md`, `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `CLAUDE.md`, `GEMINI.md`, and Cursor rules.
+AI coding agents now read guidance from many places: `AGENTS.md`, nested `AGENTS.md`, `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `CLAUDE.md`, `ANTHROPIC.md`, `GEMINI.md`, and Cursor rules.
 
 When a generated change looks wrong, the first debugging question is often simple:
 
@@ -84,6 +84,7 @@ Supported agents:
 - `copilot`
 - `cursor`
 - `claude`
+- `anthropic`
 - `gemini`
 
 ## What It Traces
@@ -94,6 +95,7 @@ Supported agents:
 | `.github/copilot-instructions.md` | Copilot | Shows repository-wide Copilot custom instructions. |
 | `.github/instructions/*.instructions.md` | Copilot | Reads simple `applyTo` frontmatter and reports matching files. |
 | `CLAUDE.md` | Claude | Shows Claude root instructions. |
+| `ANTHROPIC.md` | Anthropic | Shows Anthropic root instructions. |
 | `GEMINI.md` | Gemini | Shows Gemini root instructions. |
 | `.cursorrules` | Cursor | Shows legacy Cursor rules. |
 

@@ -1,5 +1,9 @@
 # 更新日志
 
+## Unreleased
+
+- 新增 `anthropic` 代理选择器，用于追踪 `ANTHROPIC.md` 指令文件。
+
 ## 0.1.0
 
 - 发布 `agent-which`，支持本地追踪 Codex、Copilot、Cursor、Claude 和 Gemini 指令面。

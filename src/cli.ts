@@ -102,9 +102,9 @@ function requireValue(args: string[], option: string): string {
 }
 
 function parseAgent(value: string): AgentKind {
-  const agents = new Set(["codex", "copilot", "cursor", "claude", "gemini", "all"]);
+  const agents = new Set(["codex", "copilot", "cursor", "claude", "anthropic", "gemini", "all"]);
   if (!agents.has(value)) {
-    throw new Error(`Unknown agent ${value}. Use codex, copilot, cursor, claude, gemini, or all.`);
+    throw new Error(`Unknown agent ${value}. Use codex, copilot, cursor, claude, anthropic, gemini, or all.`);
   }
   return value as AgentKind;
 }
@@ -147,8 +147,8 @@ function helpText(): string {
 Trace which AI coding-agent instruction files apply to a target path.
 
 Usage:
-  agent-which trace <target> [--root <dir>] [--agent all|codex|copilot|cursor|claude|gemini] [--json] [--out <dir>]
-  agent-which demo [--agent all|codex|copilot|cursor|claude|gemini] [--out <workspace-dir>]
+  agent-which trace <target> [--root <dir>] [--agent all|codex|copilot|cursor|claude|anthropic|gemini] [--json] [--out <dir>]
+  agent-which demo [--agent all|codex|copilot|cursor|claude|anthropic|gemini] [--out <workspace-dir>]
 
 Examples:
   agent-which trace src/index.ts --agent codex

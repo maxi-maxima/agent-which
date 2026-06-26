@@ -1,7 +1,7 @@
 import { access, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-export type AgentKind = "codex" | "copilot" | "cursor" | "claude" | "gemini" | "all";
+export type AgentKind = "codex" | "copilot" | "cursor" | "claude" | "anthropic" | "gemini" | "all";
 
 export interface TraceOptions {
   root: string;
@@ -37,7 +37,7 @@ export interface ReportFiles {
   markdown?: string;
 }
 
-const AGENT_ORDER: Array<Exclude<AgentKind, "all">> = ["codex", "copilot", "cursor", "claude", "gemini"];
+const AGENT_ORDER: Array<Exclude<AgentKind, "all">> = ["codex", "copilot", "cursor", "claude", "anthropic", "gemini"];
 
 export async function traceInstructions(options: TraceOptions): Promise<TraceResult> {
   const root = path.resolve(options.root);
@@ -170,6 +170,11 @@ async function findRootAgentFiles(root: string, agent: AgentKind): Promise<Instr
       file: "CLAUDE.md",
       agent: "claude",
       reason: "Claude Code root instructions apply when Claude is the selected agent."
+    },
+    {
+      file: "ANTHROPIC.md",
+      agent: "anthropic",
+      reason: "Anthropic root instructions apply when Anthropic is the selected agent."
     },
     {
       file: "GEMINI.md",
